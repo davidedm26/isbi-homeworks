@@ -4,9 +4,10 @@ Questa repository contiene gli homework del corso di **Information Systems and B
 
 ## Contenuto
 
-- 
-- 
-- 
+- Progetto Bonita
+- Pipeline di ML per time series
+- Dashboard Streamlit
+ 
 
 ## Note
 
