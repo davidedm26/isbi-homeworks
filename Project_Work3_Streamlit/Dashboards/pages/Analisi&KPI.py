@@ -359,13 +359,14 @@ if not df.empty:
             st.warning("⚠️ Dati non disponibili per una o entrambe le date selezionate.")
     
     # --- TAB 5: Traffico & Meteo ---
+
     with tab5:
         st.subheader("🌦️ 5. Relazione tra Traffico e Meteo")
         st.markdown("""
-        Questa sezione esamina come le **diverse condizioni meteorologiche** e i **fattori ambientali** (come temperatura, pioggia, neve e nuvolosità) influenzano il volume di traffico.
+        Questa sezione esamina come le **diverse condizioni meteorologiche** e i **fattori ambientali** (come 🌡️ temperatura, 💧 pioggia, ❄️ neve e ☁️ nuvolosità) influenzano il volume di traffico 🚗.
         """)
-    # 5.1 Grafico traffico per tipo di meteo (weather_main)
-        st.markdown("**1. Traffico Medio per Categoria Meteo Principale**")
+        # 5.1 Grafico traffico per tipo di meteo (weather_main)
+        st.markdown("**1️⃣ 🚗 Traffico Medio per Categoria Meteo Principale** 🌦️")
         # Escludiamo i valori nulli o vuoti per l'analisi
         weather_traffic = df[df['weather_main'].notna() & (df['weather_main'] != '')].groupby('weather_main')['traffic_volume'].agg(['mean', 'median', 'count']).sort_values('mean', ascending=False).reset_index()
         weather_traffic.columns = ['Condizione Meteo', 'Traffico Medio', 'Traffico Mediano', 'Conteggio Ore']
@@ -377,13 +378,13 @@ if not df.empty:
         if not weather_traffic_filtered.empty:
             fig_weather_bar = px.bar(weather_traffic_filtered, x='Condizione Meteo', y='Traffico Medio', 
                                     text_auto='.0f',
-                                    title=f"Traffico Medio per tipo di Meteo (min. {MIN_SAMPLES} campioni)")
+                                    title=f"🚗🌦️ Traffico Medio per tipo di Meteo (min. {MIN_SAMPLES} campioni)")
             fig_weather_bar.update_traces(marker_color='#2ca02c', opacity=0.85)
-            _apply_plot_style(fig_weather_bar, x_title="Condizione Meteo", y_title="Traffico Medio (veicoli/ora)")
+            _apply_plot_style(fig_weather_bar, x_title="Condizione Meteo 🌦️", y_title="Traffico Medio (veicoli/ora) 🚗")
             st.plotly_chart(fig_weather_bar, width='stretch')
             
             # Mostra la tabella di supporto
-            st.caption("Dati sottostanti (inclusa la conta dei campioni):")
+            st.caption("📊 Dati sottostanti (inclusa la conta dei campioni):")
             st.dataframe(weather_traffic.set_index('Condizione Meteo'), width='stretch')
             
         else:
@@ -392,18 +393,19 @@ if not df.empty:
         st.markdown("---")
 
         # 5.2 Correlazione con i fattori numerici (Temperatura, Pioggia, Neve, Nuvolosità)
-        st.markdown("**2. Relazione con i Fattori Numerici (Temperatura, Pioggia, Neve, Nuvolosità)**")
+        st.markdown("**2️⃣ Relazione con i Fattori Numerici** 🌡️💧❄️☁️")
         
         # --- Temperatura ---
+        st.markdown("**🌡️ Traffico Medio per intervallo di Temperatura**")
         temp_bins = pd.cut(df['temp'], bins=10, duplicates='drop')
         temp_traffic = df.groupby(temp_bins, observed=True)['traffic_volume'].mean().round(2).reset_index()
         temp_traffic['temp_range'] = temp_traffic['temp'].astype(str)
         
         fig_temp = px.bar(temp_traffic, x='temp_range', y='traffic_volume', 
-                        title='Traffico Medio per intervallo di Temperatura',
+                        title='🌡️🚗 Traffico Medio per intervallo di Temperatura',
                         text_auto='.0f')
         fig_temp.update_traces(marker_color='#d62728', opacity=0.85)
-        _apply_plot_style(fig_temp, x_title="Intervallo di Temperatura (°C)", y_title="Traffico Medio (veicoli/ora)")
+        _apply_plot_style(fig_temp, x_title="Intervallo di Temperatura (°C) 🌡️", y_title="Traffico Medio (veicoli/ora) 🚗")
         st.plotly_chart(fig_temp, width='stretch')
         
 
@@ -411,7 +413,7 @@ if not df.empty:
         
         # --- Grafico Pioggia (rain_1h) ---
         with col_rain:
-            st.caption("💧 Pioggia (Rain_1h) vs Traffico")
+            st.caption("💧 Pioggia (Rain_1h) vs Traffico 🚗")
             # Pioggia: Raggruppiamo i valori di pioggia > 0.05 per analizzare l'effetto delle piogge vere
             rain_groups = df['rain_1h'].apply(lambda x: 'Zero/Minima' if x < 0.05 else ('Leggera' if x < 1.0 else 'Forte'))
             # Assicuriamoci che l'ordine sia logico (Zero, Leggera, Forte)
@@ -424,15 +426,15 @@ if not df.empty:
                 rain_traffic = df.groupby(rain_groups, observed=True)['traffic_volume'].mean().round(2).reset_index().sort_values('traffic_volume', ascending=False)
             
             fig_rain = px.bar(rain_traffic, x=rain_groups.name, y='traffic_volume', 
-                            title='Traffico Medio per Intensità di Pioggia',
+                            title='💧🚗 Traffico Medio per Intensità di Pioggia',
                             text_auto='.0f')
             fig_rain.update_traces(marker_color='#17becf', opacity=0.85)
-            _apply_plot_style(fig_rain, x_title="Intensità di Pioggia (mm/h)", y_title="Traffico Medio")
+            _apply_plot_style(fig_rain, x_title="Intensità di Pioggia (mm/h) 💧", y_title="Traffico Medio 🚗")
             st.plotly_chart(fig_rain, width='stretch')
 
         # --- Grafico Neve (snow_1h) (AGGIUNTO) ---
         with col_snow:
-            st.caption("❄️ Neve (Snow_1h) vs Traffico")
+            st.caption("❄️ Neve (Snow_1h) vs Traffico 🚗")
             
             # Filtriamo le ore dove c'è stata neve (snow_1h > 0)
             df_snow = df[df['snow_1h'] > 0].copy()
@@ -449,28 +451,28 @@ if not df.empty:
                 snow_traffic = snow_traffic.sort_values(snow_groups.name)
 
                 fig_snow = px.bar(snow_traffic, x=snow_groups.name, y='traffic_volume', 
-                                title='Traffico Medio per Intensità di Neve',
+                                title='❄️🚗 Traffico Medio per Intensità di Neve',
                                 text_auto='.0f')
                 fig_snow.update_traces(marker_color='#8c564b', opacity=0.85)
-                _apply_plot_style(fig_snow, x_title="Intensità di Neve (mm/h)", y_title="Traffico Medio")
+                _apply_plot_style(fig_snow, x_title="Intensità di Neve (mm/h) ❄️", y_title="Traffico Medio 🚗")
                 st.plotly_chart(fig_snow, width='stretch')
             else:
-                st.warning("Nessuna precipitazione nevosa registrata nel dataset.")
+                st.warning("⚠️ Nessuna precipitazione nevosa registrata nel dataset.")
 
 
         # --- Nuvolosità (Aggiustata per usare la colonna intera) ---
         st.markdown("---")
-        st.caption("☁️ Nuvolosità (Clouds_all) vs Traffico")
+        st.caption("☁️ Nuvolosità (Clouds_all) vs Traffico 🚗")
         
         # Nuvolosità: Creazione di bin per la percentuale di copertura nuvolosa
-        cloud_bins = pd.cut(df['clouds_all'], bins=[0, 20, 80, 101], labels=['0-20% (Sereno)', '21-80% (Variabile)', '81-100% (Coperto)'], right=False)
+        cloud_bins = pd.cut(df['clouds_all'], bins=[0, 20, 80, 101], labels=['0-20% (Sereno) ☀️', '21-80% (Variabile) 🌤️', '81-100% (Coperto) ☁️'], right=False)
         cloud_traffic = df.groupby(cloud_bins, observed=True)['traffic_volume'].mean().round(2).reset_index()
         
         fig_clouds = px.bar(cloud_traffic, x='clouds_all', y='traffic_volume', 
-                            title='Traffico Medio per Fascia di Nuvolosità',
+                            title='☁️🚗 Traffico Medio per Fascia di Nuvolosità',
                             text_auto='.0f')
         fig_clouds.update_traces(marker_color='#7f7f7f', opacity=0.85)
-        _apply_plot_style(fig_clouds, x_title="Copertura Nuvolosa (%)", y_title="Traffico Medio")
+        _apply_plot_style(fig_clouds, x_title="Copertura Nuvolosa (%) ☁️", y_title="Traffico Medio 🚗")
         st.plotly_chart(fig_clouds, width='stretch')
 
 else:

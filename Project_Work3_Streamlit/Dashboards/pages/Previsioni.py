@@ -510,13 +510,11 @@ if pipeline is not None:
         with col1:
             st.markdown("### 📅 Data e Ora")
             d_date = st.date_input("Giorno", value=datetime.now())
-            
             # Salviamo l'orario in una variabile per calcolare i lag di default
             t_time = st.time_input("Orario", value=datetime.now())
-            
             st.markdown("### 🗓️ Contesto")
             selected_holiday = st.selectbox("Giorno Festivo", holiday_options)
-            is_weekend_input = st.checkbox("È Weekend?", value=False)
+            # is_weekend_input rimosso: ora viene calcolato automaticamente
 
         with col2:
             st.markdown("### ☁️ Meteo")
@@ -536,6 +534,8 @@ if pipeline is not None:
     
     # Calcoliamo il valore suggerito in base all'ora scelta sopra
     default_lag_val = float(estimate_background_lags(t_time.hour))
+    # Calcolo automatico weekend
+    is_weekend_input = (d_date.weekday() >= 5)
 
     with st.expander("🛠️ Dati Storici Avanzati (Opzionale)"):
         st.info("Questi valori sono stimati automaticamente in base all'ora scelta. Se conosci i dati reali del traffico precedente, puoi modificarli qui.")
@@ -580,7 +580,7 @@ if pipeline is not None:
             'day_of_week': [float(dt.weekday())],
             'month': [float(dt.month)],
             'year': [float(dt.year)],            
-            'is_weekend': [bool(is_weekend_input)],       
+            'is_weekend': [is_weekend_input],    # ora calcolato automaticamente
             # QUI usiamo le variabili dell'expander
             'lag_1': [float(input_lag_1)],
             'lag_24': [float(input_lag_24)],
