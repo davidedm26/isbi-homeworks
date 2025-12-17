@@ -1,0 +1,14 @@
+Step da seguire per avviare l'applicazione:
+
+1. Creare ambiente virtuale:
+	python -m venv .venv
+
+2. Attivare l’ambiente: 
+	.venv\Scripts\Activate.ps1 
+    
+3. Scaricare i requirments:
+	python -m pip install --upgrade pip (oppure python.exe -m pip install --upgrade pip)
+	pip install -r requirements.txt
+
+4. Avviare l’applicazione:
+	streamlit run .\app.py

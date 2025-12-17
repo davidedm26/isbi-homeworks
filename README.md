@@ -4,9 +4,9 @@ Questa repository contiene gli homework del corso di **Information Systems and B
 
 ## Contenuto
 
-- Progetto Bonita
-- Pipeline di ML per time series
-- Dashboard Streamlit
+- Project Work #1: Progetto Bonita
+- Project Work #2: Pipeline di ML per time series
+- Project Work #3: Dashboard Streamlit
  
 
 ## Note
